@@ -16,6 +16,25 @@ class App extends Component {
     filter: '',
   };
 
+  componentDidMount = () => {
+    try {
+      const json = localStorage.getItem('contacts');
+      const parsedContacts = JSON.parse(json);
+      
+      if (parsedContacts) {
+        this.setState(() => ({contacts: parsedContacts}))
+      }
+    } catch (error) {
+      console.error("Something bad happened");
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevStates) => {
+    if(prevStates.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
   addContact = (name, number) => {
     const contactExists = this.state.contacts.some(
       contact => contact.name.toLowerCase() === name.toLowerCase()
